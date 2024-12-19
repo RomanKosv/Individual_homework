@@ -1,12 +1,8 @@
 /.gitignore
 /.vs
 /Version independent files
+.DS_Store
+/.vscode/
 
-#for programming: Lab4
-/Lab4/obj/
-/Lab4/bin/
-
-#for tbi: Lab1
-/Lab1/x64/
-/Lab1/Lab1/x64
-/Lab1/.vs/
+/Lab*/bin/
+/Lab*/obj/
