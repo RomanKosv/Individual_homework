@@ -13,10 +13,11 @@ public:
     int size();
 private:
     BinTree(T root, BinTree<T> *left, BinTree<T> *right);
-    void leftRotate();
-    void rightRotate();
     BinTree<T> *left;
     BinTree<T> *right;
+    void rightRotate();
+    void leftRotate();
+    void balance();
     T root;
     int height;
 };
