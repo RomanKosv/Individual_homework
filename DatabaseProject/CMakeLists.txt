@@ -6,8 +6,12 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_executable(DatabaseProject main.cpp
-    bintree.h bintree.cpp
+    bintree.h
     utils.h
+
+    array_utils.h
+    linkedlist.h
+
 )
 
 include(GNUInstallDirs)
