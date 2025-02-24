@@ -32,26 +32,42 @@ void print_index(Iter &iter){
     });
 }
 
+LinkedList<DeadlineIndex, true> deadline_list{};
+LinkedList<ImportanceIndex, true> importance_list{};
+SortedSet<DeadlineIndex> deadline_tree{};
+SortedSet<ImportanceIndex> importance_tree{};
+nevector<DeadlineIndex> deadline_array{};
+nevector<ImportanceIndex> importance_array{};
+
+void shadow(int index) {
+    assert(index < arr.size());
+    assert(index >=0);
+    arr[index].shadow=true;
+}
+void change(int index, Task newval) {
+    assert(index < arr.size());
+    assert(index >=0);
+    arr[index] = newval;
+    merge_sort(deadline_array, [](DeadlineIndex& a,DeadlineIndex& b){return a<b;});
+    merge_sort(importance_array, [](ImportanceIndex& a,ImportanceIndex& b){return a<b;});
+    deadline_tree = SortedSet<DeadlineIndex>{};
+    importance_tree = SortedSet<ImportanceIndex>{};
+    deadline_list = LinkedList<DeadlineIndex, true>{};
+    importance_list = LinkedList<ImportanceIndex, true>{};
+    for(int i = 0; i< arr.size(); i++){
+        deadline_list.add(DeadlineIndex(i));
+        //deadline_array.print();
+        //importance_array.print();
+        //LinkedList<DeadlineIndex,true>::print(deadline_list);
+        importance_list.add(ImportanceIndex(i));
+        //LinkedList<ImportanceIndex,true>::print(importance_list);
+        deadline_tree.add(DeadlineIndex(i));
+        //SortedSet<DeadlineIndex>::print(deadline_tree);
+        importance_tree.add(ImportanceIndex(i));
+    }
+}
 int main()
 {
-    LinkedList<DeadlineIndex, true> deadline_list{};
-    LinkedList<ImportanceIndex, true> importance_list{};
-    SortedSet<DeadlineIndex> deadline_tree{};
-    SortedSet<ImportanceIndex> importance_tree{};
-    nevector<DeadlineIndex> deadline_array{};
-    nevector<ImportanceIndex> importance_array{};
-    for(int i = 0; i < 20; i++){
-        arr[i].print();
-        cout<<'\n';
-        DeadlineIndex a;
-        DeadlineIndex b;
-        a=DeadlineIndex(0);
-        b=DeadlineIndex(1);
-        if (i > 0) cout<<(a <= b) << "\n";
-        cout<<"size: "<<arr.size()<<'\n';
-
-        //SortedSet<ImportanceIndex>::print(importance_tree);
-    }
     while (true) {
         string command;
         cin >> command;
@@ -101,15 +117,8 @@ int main()
             //SortedSet<DeadlineIndex>::print(deadline_tree);
             importance_tree.add(ImportanceIndex(i));
         }
-        else if (command == "find") {
-            string index, method, key;
-            cin >> index;
-            cin>>method;
-            cin >> key;
-            if (index == "list" && key == "deadline" && method == "recursion") {
-
-                deadline_list.find<true>()
-            }
+        else if (command == "stop") {
+            break;
         }
     }
 }

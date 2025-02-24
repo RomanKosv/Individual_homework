@@ -52,6 +52,7 @@ public:
     void foreach(void fun(T*)) {
         for(int i = 0; i<ln; i++) fun(&(array[i]));
     }
+
     ~nevector(){
         delete [] array;
     }

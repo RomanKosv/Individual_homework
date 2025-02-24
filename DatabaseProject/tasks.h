@@ -29,6 +29,7 @@ public:
     DateTime deadline;
     double importance;
     string description;
+    bool shadow = false;
     static Task input(){
         Task task;
         cin>>task.description;
@@ -43,15 +44,20 @@ public:
         return task;
     }
     void print(){
-        cout<<"description: "<<description<<'\n';
-        cout<<"importance: "<<importance<<'\n';
-        cout<<"deadline:\n";
-        cout<<"\tyear: "<<deadline.year<<"\n";
-        cout<<"\tmounth: "<<deadline.mounth<<'\n';
-        cout<<"\tday: "<<deadline.day<<'\n';
-        cout<<"\thour: "<<deadline.hour<<'\n';
-        cout<<"\tminute: "<<deadline.minute<<'\n';
-        cout<<"time in minutes to solve: "<<time_minutes<<'\n';
+        if (shadow) {
+            cout << "deleted\n";
+        }
+        else{
+            cout<<"description: "<<description<<'\n';
+            cout<<"importance: "<<importance<<'\n';
+            cout<<"deadline:\n";
+            cout<<"\tyear: "<<deadline.year<<"\n";
+            cout<<"\tmounth: "<<deadline.mounth<<'\n';
+            cout<<"\tday: "<<deadline.day<<'\n';
+            cout<<"\thour: "<<deadline.hour<<'\n';
+            cout<<"\tminute: "<<deadline.minute<<'\n';
+            cout<<"time in minutes to solve: "<<time_minutes<<'\n';
+        }
     }
 };
 

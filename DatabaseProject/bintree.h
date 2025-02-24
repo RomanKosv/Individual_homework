@@ -2,6 +2,7 @@
 #define BINTREE_H
 
 #include "utils.h"
+#include "tasks.h"
 #include <iostream>
 
 using namespace std;
@@ -227,5 +228,15 @@ private:
     BinTree *tree;
     int size_;
 };
+
+template<comporable Ind, comporable Key>
+void shadow_all(SortedSet<Ind> &tree, Ind key) {
+    tree.findall_iterative(key, [](Index<Key>* obj){
+        arr[obj->index].shadow = true;
+    });
+    while (tree.remove(key)) {}
+}
+
+
 
 #endif // BINTREE_H
