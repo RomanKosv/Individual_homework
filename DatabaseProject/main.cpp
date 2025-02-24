@@ -106,8 +106,9 @@ int main()
             cin >> index;
             cin>>method;
             cin >> key;
-            if (index == "array" && key == "deadline" && method == "recursion") {
+            if (index == "list" && key == "deadline" && method == "recursion") {
 
+                deadline_list.find<true>()
             }
         }
     }

@@ -42,6 +42,23 @@ public:
             balance();
             updateHeight();
         }
+
+        static void findall_recursive(BinTree *tree, T key, void fun(T*)) {
+            if (tree!=nullptr) {
+                if (tree->root == key) fun(&(tree->root));
+                if (tree->root <= key) findall_recursive(tree->right, key, fun);
+                else findall_recursive(tree->left, key, fun);
+            }
+        }
+
+        static void findall_iterative(BinTree *tree, T key, void fun(T*)) {
+            while (tree != nullptr) {
+                if (tree->root == key) fun(&(tree->root));
+                if (tree->root <= key) tree = tree->right;
+                else tree = tree->left;
+            }
+        }
+
         bool remove(T obj){
             if (obj == root) {
                 if (right == nullptr){
@@ -166,6 +183,15 @@ public:
     int size(){
         return size_;
     }
+
+    void findall_recursive(T key, void fun(T*)){
+        BinTree::findall_recursive(tree, key, fun);
+    }
+
+    void findall_iterative(T key, void fun(T*)) {
+        BinTree::findall_iterative(tree, key, fun);
+    }
+
     ~SortedSet(){
         tree->freeTree();
         delete tree;

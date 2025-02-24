@@ -33,19 +33,34 @@ public:
             }
             else return deleteFound(&((*node)->next), check);
         }
-        static Node* recursionFind(Node* node, T obj) {
-            if (node == nullptr || (sorted && !(obj <= node->object))) return nullptr;
-            else if (node->object == obj) return node;
-            else return recursionFind(node->next, obj);
+        static void recursionFind(Node* node, T obj, void fun(Node*)) {
+            if (node == nullptr) return;
+            else if (node->object == obj) fun(node);
+            else if (node->object <= obj) recursionFind(node->next, obj, fun);
+            else return;
         }
-        static Node* iterationFind(Node* node, T obj) {
+        static void iterationFind(Node* node, T obj, void fun(Node*)) {
             while (true) {
-                if (node == nullptr || (sorted && !(obj <= node->object))) return nullptr;
-                else if (node->object == obj) return node;
-                else node = node->next;
+                if (node == nullptr) return;
+                else if (node->object == obj) fun(node);
+                else if (node->object <= obj) node = node ->next;
+                else return;
             }
         }
     };
+    void findall_iterative(T obj, void fun(T*)) {
+        Node::iterationFind(first, obj, [&fun](Node* nd) {
+            fun(&(nd->object));
+        });
+    }
+    void findall_recursive(T obj, void fun(T*)) {
+        Node::recursionFind(first, obj, [&fun](Node* nd) {
+            fun(&(nd->object));
+        });
+    }
+    void delete_all(T obj) {
+
+    }
     void add(T obj){
         if (sorted) addSorted(obj);
         else addLast(obj);
