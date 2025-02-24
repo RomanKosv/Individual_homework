@@ -6,36 +6,109 @@
 
 using namespace std;
 
-static nevector<Task> arr;
-
-template<comporable T>
-class Index {
+class DeadlineIndex :public Index<DateTime>{
 public:
-    int index;
-    virtual T key(Task t);
-    bool operator <=(Index<T> &other){
-        return key(arr[index]) <= other.key(arr[other.index]);
-    }
-    bool operator ==(Index<T> &other){
-        return key(arr[index]) == other.key(arr[other.index]);
-    }
-};
-
-struct DeadlineIndex : Index<DateTime>{
-    DateTime key(Task t) override {
+    DeadlineIndex() {}
+    DeadlineIndex(int ind) : Index(ind){}
+    DateTime key(Task &t) override {
         return t.deadline;
     }
 };
 
-struct ImportanceIndex : Index<double> {
-    double key(Task t) override {
+class ImportanceIndex : public Index<double> {
+public:
+    ImportanceIndex() {}
+    ImportanceIndex(int ind) : Index(ind){}
+    double key(Task &t) override {
         return t.importance;
     }
 };
+template<typename Iter, typename Index>
+void print_index(Iter &iter){
+    cout<<"Index:\n";
+    iter.foreach([](Index *ind) {
+        ind->print();
+        cout << "--------------\n";
+    });
+}
 
 int main()
 {
+    LinkedList<DeadlineIndex, true> deadline_list{};
+    LinkedList<ImportanceIndex, true> importance_list{};
+    SortedSet<DeadlineIndex> deadline_tree{};
+    SortedSet<ImportanceIndex> importance_tree{};
+    nevector<DeadlineIndex> deadline_array{};
+    nevector<ImportanceIndex> importance_array{};
     for(int i = 0; i < 20; i++){
+        arr[i].print();
+        cout<<'\n';
+        DeadlineIndex a;
+        DeadlineIndex b;
+        a=DeadlineIndex(0);
+        b=DeadlineIndex(1);
+        if (i > 0) cout<<(a <= b) << "\n";
+        cout<<"size: "<<arr.size()<<'\n';
 
+        //SortedSet<ImportanceIndex>::print(importance_tree);
+    }
+    while (true) {
+        string command;
+        cin >> command;
+        if (command == "print") {
+            string mode;
+            cin >> mode;
+            if (mode == "all") {
+                for(int i = 0; i < arr.size(); i++) {
+                    arr[i].print();
+                    cout << "-------------\n";
+                }
+            }
+            else if (mode == "deadline tree") {
+                print_index<SortedSet<DeadlineIndex>,DeadlineIndex>(deadline_tree);
+            }
+            else if (mode == "importance tree") {
+                print_index<SortedSet<ImportanceIndex>,ImportanceIndex>(importance_tree);
+            }
+            else if (mode == "deadline list") {
+                print_index<LinkedList<DeadlineIndex, true>,DeadlineIndex>(deadline_list);
+            }
+            else if (mode == "importance list") {
+                print_index<LinkedList<ImportanceIndex, true>,ImportanceIndex>(importance_list);
+            }
+            else if (mode == "deadline array") {
+                print_index<nevector<DeadlineIndex>,DeadlineIndex>(deadline_array);
+            }
+            else if (mode == "importance array") {
+                print_index<nevector<ImportanceIndex>,ImportanceIndex>(importance_array);
+            }
+            else cout << "it is not valid print mode";
+        }
+        else if (command == "add") {
+            int i = arr.size();
+            arr.push(Task::input());
+            deadline_array.push(DeadlineIndex(i));
+            swap_sort(deadline_array, [](DeadlineIndex& a,DeadlineIndex& b){return a<b;});
+            importance_array.push(ImportanceIndex(i));
+            swap_sort(importance_array, [](ImportanceIndex& a, ImportanceIndex& b) {return a<b;});
+            deadline_list.add(DeadlineIndex(i));
+            //deadline_array.print();
+            //importance_array.print();
+            //LinkedList<DeadlineIndex,true>::print(deadline_list);
+            importance_list.add(ImportanceIndex(i));
+            //LinkedList<ImportanceIndex,true>::print(importance_list);
+            deadline_tree.add(DeadlineIndex(i));
+            //SortedSet<DeadlineIndex>::print(deadline_tree);
+            importance_tree.add(ImportanceIndex(i));
+        }
+        else if (command == "find") {
+            string index, method, key;
+            cin >> index;
+            cin>>method;
+            cin >> key;
+            if (index == "array" && key == "deadline" && method == "recursion") {
+
+            }
+        }
     }
 }

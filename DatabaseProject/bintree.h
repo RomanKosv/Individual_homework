@@ -2,9 +2,9 @@
 #define BINTREE_H
 
 #include "utils.h"
+#include <iostream>
 
-
-
+using namespace std;
 
 template<comporable T>
 class SortedSet{
@@ -18,16 +18,29 @@ public:
         using branch = BinTree *;
     public:
         BinTree(T root_) {
+            std::cout<<"init tree\n";
             root = root_;
+            left=nullptr;
+            right = nullptr;
+            height = 1;
+        }
+        void updateHeight(){
+            int l = 0, r =0;
+            if (left!=nullptr) l = left->height;
+            if (right!=nullptr) r = right->height;
+            height = max(l, r)+1;
         }
         void add(T obj){
             if (root <= obj){
-                right ->add(obj);
+                if (right == nullptr) right = new BinTree(obj);
+                else right->add(obj);
             }
             else{
-                left->add(obj);
+                if (left == nullptr) left = new BinTree(obj);
+                else left->add(obj);
             }
             balance();
+            updateHeight();
         }
         bool remove(T obj){
             if (obj == root) {
@@ -45,6 +58,7 @@ public:
                     right->remove(root);
                     balance();
                 }
+                updateHeight();
                 return true;
             }
             else{
@@ -56,6 +70,7 @@ public:
                     removed = left->remove(obj);
                 }
                 balance();
+                updateHeight();
                 return removed;
             }
         }
@@ -71,7 +86,7 @@ public:
             root = root_;
             left = left_;
             right = right_;
-            height = max(left_->height, right->height);
+            updateHeight();
         }
         BinTree *left;
         BinTree *right;
@@ -100,16 +115,18 @@ public:
         void rightRotate(){
             right = new BinTree(root, left->right, right);
             branch left_left = left->left;
+            root = left->root;
             delete left;
             left = left_left;
-            height = max(left->height, right->height);
+            updateHeight();
         }
         void leftRotate(){
             left = new BinTree(root, left, right->left);
             branch right_right = right->right;
+            root = right->root;
             delete right;
             right = right_right;
-            height = max(left->height, right->height);
+            updateHeight();
         }
         void balance(){
             int delta = getBalance();
@@ -127,16 +144,14 @@ public:
             }
         }
     };
-    bool add(T obj){
+    void add(T obj){
         if (tree == nullptr) {
             tree = new BinTree(obj);
-            return true;
         }
-        else if (tree->add(obj)){
+        else{
+            tree->add(obj);
             size_++;
-            return true;
         }
-        else return false;
     }
     bool remove(T obj){
         if (tree == nullptr) {
@@ -154,6 +169,33 @@ public:
     ~SortedSet(){
         tree->freeTree();
         delete tree;
+    }
+    static void pr(BinTree *tr, int tabs){
+        if (tr == nullptr) {
+            for(int i = 0; i<tabs; i++) std::cout<<'\t';
+            std::cout << "nullptr\n";
+        }
+        else {
+            pr(tr->left, tabs+1);
+            for(int i = 0; i<tabs; i++) std::cout<<'\t';
+            std::cout <<tr->root<<"{height="<<tr->height<<"}:\n";
+            pr(tr->right, tabs+1);
+        }
+    };
+    static void print(SortedSet<T> &set){
+        int tabs = 0;
+        cout<<"Tree:\n";
+        pr(set.tree, tabs);
+    }
+    static void foreach(void fun(T*), BinTree* tr){
+        if (tr != nullptr){
+            foreach(fun, tr->left);
+            fun(&(tr->root));
+            foreach(fun, tr->right);
+        }
+    }
+    void foreach(void fun(T*)){
+        foreach(fun, tree);
     }
 private:
     BinTree *tree;

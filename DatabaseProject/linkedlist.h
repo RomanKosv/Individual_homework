@@ -2,6 +2,9 @@
 #define LINKEDLIST_H
 
 #include "utils.h"
+#include <iostream>
+
+using namespace std;
 
 template<comporable T, bool sorted=false>
 class LinkedList{
@@ -53,6 +56,22 @@ public:
     ~LinkedList(){
         Node::freeAll(first);
     }
+    static void print(LinkedList<T,sorted> &list) {
+        Node *current = list.first;
+        cout << '[';
+        while (current != nullptr) {
+            cout << current->object<<" ;";
+            current = current->next;
+        }
+        cout << "]\n";
+    }
+    void foreach( void fun(T*)){
+        Node *current = first;
+        while (current != nullptr) {
+            fun(&(current->object));
+            current = current->next;
+        }
+    }
 
 private:
     Node *first;
@@ -66,7 +85,7 @@ private:
     }
     void addSorted(T obj) {
         Node **current = &first;
-        while (! (*current != nullptr || obj <= (*current)->object)) current = &((*current)->next);
+        while (! (*current == nullptr || obj <= (*current)->object)) current = &((*current)->next);
         *current = new Node(obj, *current);
     }
 };
