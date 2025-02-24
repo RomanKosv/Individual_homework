@@ -11,21 +11,31 @@ static nevector<Task> arr;
 template<comporable T>
 class Index {
 public:
-    virtual T key();
-
+    int index;
+    virtual T key(Task t);
+    bool operator <=(Index<T> &other){
+        return key(arr[index]) <= other.key(arr[other.index]);
+    }
+    bool operator ==(Index<T> &other){
+        return key(arr[index]) == other.key(arr[other.index]);
+    }
 };
 
-struct DeadlineIndex {
-    int index;
-    bool operator <=(DeadlineIndex& other) {
-        return arr[index].deadline <= arr[other.index].deadline;
+struct DeadlineIndex : Index<DateTime>{
+    DateTime key(Task t) override {
+        return t.deadline;
     }
-    bool operator ==(DeadlineIndex& other) {
-        return arr[index].deadline == arr[other.index].deadline;
+};
+
+struct ImportanceIndex : Index<double> {
+    double key(Task t) override {
+        return t.importance;
     }
 };
 
 int main()
 {
+    for(int i = 0; i < 20; i++){
 
+    }
 }

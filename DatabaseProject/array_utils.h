@@ -5,12 +5,14 @@ template<typename T>
 class nevector{
 private:
     int ln;
+    int reserved;
     T *array;
 public:
     nevector(int size){
         assert(size>0);
-        array=new T[size];
-        this->ln=size;
+        ln = size;
+        reserved = ln * 2;
+        array=new T[reserved];
     }
     nevector() : nevector(0) {
     }
@@ -21,6 +23,19 @@ public:
         assert(ind>=0);
         assert(ind<ln);
         return array[ind];
+    }
+    void push(T obj) {
+        if (ln == reserved) {
+            reserved = ln * 2;
+            T *newarr = new T[reserved];
+            for(int i = 0; i < ln; i++) {
+                newarr[i] = array[i];
+            }
+            delete array[];
+            array = newarr;
+        }
+        ln++;
+        (*this)[ln-1] = obj;
     }
     ~nevector(){
         delete [] array;
