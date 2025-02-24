@@ -3,7 +3,7 @@
 
 #include "utils.h"
 
-template<comporable T, bool sorted>
+template<comporable T, bool sorted=false>
 class LinkedList{
 public:
     struct Node{
@@ -53,6 +53,7 @@ public:
     ~LinkedList(){
         Node::freeAll(first);
     }
+
 private:
     Node *first;
     void addFirst(T obj) {

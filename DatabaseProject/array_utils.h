@@ -12,6 +12,8 @@ public:
         array=new T[size];
         this->ln=size;
     }
+    nevector() : nevector(0) {
+    }
     int size(){
         return ln;
     }
@@ -76,7 +78,32 @@ nevector<int> SortIndsBy(nevector<T> vec, bool comp(T, T), Sort sort_on_place) {
         );
     return inds;
 }
-
-
+template<typename Predicate>
+int bin_search_iterate_last(int left, int right, Predicate less_or_eq){
+    while(right-left>1){
+        int mid=(right+left)/2;
+        if(less_or_eq(mid)){
+            left=mid;
+        }else{
+            right=mid;
+        }
+    }
+    return left;
+}
+template<typename Predicate>
+int bin_search_req_last(int left, int right, Predicate less_or_eq){
+    if(right-left<=1){
+        return left;
+    }
+    else{
+        int mid=(right+left)/2;
+        if(less_or_eq(mid)){
+            left=mid;
+        }else{
+            right=mid;
+        }
+        return bin_search_req_last(left,right,less_or_eq);
+    }
+}
 
 #endif // ARRAY_UTILS_H

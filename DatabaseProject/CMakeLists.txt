@@ -11,6 +11,7 @@ add_executable(DatabaseProject main.cpp
 
     array_utils.h
     linkedlist.h
+    tasks.h
 
 )
 
