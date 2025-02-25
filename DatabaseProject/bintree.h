@@ -60,35 +60,42 @@ public:
             }
         }
 
-        bool remove(T obj){
-            if (obj == root) {
-                if (right == nullptr){
-                    branch old_left = left;
-                    left = old_left->left;
-                    right = old_left->right;
-                    root = old_left->root;
-                    delete old_left;
+        static bool remove(BinTree** tree, T obj){
+            if ((*tree) == nullptr) return false;
+            else if (obj == (*tree)->root) {
+                if ((*tree)->height == 1) {
+                    *tree = nullptr;
+                    return true;
                 }
-                else {
-                    branch current = right;
-                    while (current->left != nullptr) current = current->left;
-                    root = current->root;
-                    right->remove(root);
-                    balance();
+                else{
+                    if ((*tree)->right == nullptr){
+                        branch old_left = (*tree)->left;
+                        (*tree)->left = old_left->left;
+                        (*tree)->right = old_left->right;
+                        (*tree)->root = old_left->root;
+                        delete old_left;
+                    }
+                    else {
+                        branch current = (*tree)->right;
+                        while (current->left != nullptr) current = current->left;
+                        (*tree)->root = current->root;
+                        remove(&((*tree)->right), (*tree)->root);
+                        (*tree)->balance();
+                    }
                 }
-                updateHeight();
+                (*tree)->updateHeight();
                 return true;
             }
             else{
                 bool removed = false;
-                if ((root <= obj) && (right != nullptr)){
-                    removed = right->remove(obj);
+                if (((*tree)->root <= obj) && ((*tree)->right != nullptr)){
+                    removed = remove(&((*tree)->right), obj);
                 }
-                else if (left != nullptr){
-                    removed = left->remove(obj);
+                else if ((*tree)->left != nullptr){
+                    removed = remove(&((*tree)->left), obj);
                 }
-                balance();
-                updateHeight();
+                (*tree)->balance();
+                (*tree)->updateHeight();
                 return removed;
             }
         }
@@ -172,15 +179,7 @@ public:
         }
     }
     bool remove(T obj){
-        if (tree == nullptr) {
-            return false;
-        }
-        else if ((tree->root == obj) && (tree->right == nullptr) && (tree->left == nullptr)) {
-            tree = nullptr;
-            size_=0;
-            return true;
-        }
-        else if (tree->remove(obj)){
+        if (BinTree::remove(&tree, obj)){
             size_--;
             return true;
         }
