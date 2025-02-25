@@ -80,11 +80,11 @@ public:
                 return true;
             }
             else{
-                bool removed;
-                if (root <= obj){
+                bool removed = false;
+                if ((root <= obj) && (right != nullptr)){
                     removed = right->remove(obj);
                 }
-                else{
+                else if (left != nullptr){
                     removed = left->remove(obj);
                 }
                 balance();
@@ -174,6 +174,11 @@ public:
     bool remove(T obj){
         if (tree == nullptr) {
             return false;
+        }
+        else if ((tree->root == obj) && (tree->right == nullptr) && (tree->left == nullptr)) {
+            tree = nullptr;
+            size_=0;
+            return true;
         }
         else if (tree->remove(obj)){
             size_--;
